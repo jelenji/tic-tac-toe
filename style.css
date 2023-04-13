@@ -11,10 +11,18 @@
 }
 
 .square{
-    width: 250px;
-    height: 250px;
+    min-width: 250px;
+    min-height: 250px;
     border: 2px solid black;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.symbol{
+    font-size: 12em;
+    user-select: none;
 }
 
 .board{
@@ -22,6 +30,23 @@
     grid-template-columns: 250px 250px 250px;
     justify-content: center;
     align-items: center;
-    border: 3px solid black;
+    border: 2px solid black;
 
+
+}
+
+.top{
+    border-top: 0;
+}
+
+.left{
+    border-left: 0;
+}
+
+.right{
+    border-right: 0;
+}
+
+.bottom{
+    border-bottom: 0;
 }
