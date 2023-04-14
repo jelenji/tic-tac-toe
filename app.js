@@ -97,6 +97,7 @@ function resetBoard() {
   conclusion.textContent = "";
   squares.forEach((square) => {
     square.textContent = "";
+    square.classList.remove("inverted")
   });
 }
 
@@ -120,11 +121,24 @@ function displayBoard(board) {
   });
 }
 
-function winner(symbol, squareA = 0, squareB = 0, sqaureC = 0) {
+function winner(symbol, squareA = 0, squareB = 0, squareC = 0) {
   conclusion.textContent =
     symbol === "X"
-      ? "Player 1 Won"
+      ? "X Won"
       : symbol === "O"
-      ? "Player 2 Won"
-      : "Game Ends In A Tie";
+      ? "O Won"
+      : "It's A Draw";
+
+      if(symbol !== "-"){
+        let cellA = document.querySelector(`#${CSS.escape(squareA)}`);
+        let cellB = document.querySelector(`#${CSS.escape(squareB)}`);
+        let cellC = document.querySelector(`#${CSS.escape(squareC)}`)
+
+        cellA.classList.add('inverted');
+        cellA.firstChild.style.color = "#222831";
+        cellB.classList.add('inverted');
+        cellB.firstChild.style.color = "#222831";
+        cellC.classList.add('inverted');
+        cellC.firstChild.style.color = "#222831";
+      }
 }
