@@ -1,54 +1,116 @@
+let squares = document.querySelectorAll(".square");
+let wrapper = document.querySelector(".wrapper");
+let newGame = document.querySelector(".new-game");
+let conclusion = document.querySelector(".conclusion");
+
 const gameBoard = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
   let xTurn = true;
   let oTurn = false;
+  let playing = true;
 
-  const resetBoard = (board = ["", "", "", "", "", "", "", "", ""]);
+  const reset = () => {
+    board = ["", "", "", "", "", "", "", "", ""];
+    xTurn = true;
+    oTurn = false;
+    playing = true;
+    resetBoard();
+  };
+
+  const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
   const changeTurn = () => {
     xTurn = xTurn == true ? false : true;
     oTurn = oTurn == true ? false : true;
-    console.log("xturn" + xTurn);
   };
 
   const move = (a) => {
-    if (board[a] === "") {
+    if (board[a] === "" && playing === true) {
       board[a] = xTurn === true ? "X" : "O";
+      displayBoard(board);
+      checkWin();
       changeTurn();
-      console.log(board);
     }
   };
 
-  return { board, move };
-})();
+  const checkWin = () => {
+    let first,
+      second,
+      third,
+      fullBoard,
+      winnerFound = false;
+    for (let i = 0; i < winConditions.length; i++) {
+      first = board[winConditions[i][0]];
+      second = board[winConditions[i][1]];
+      third = board[winConditions[i][2]];
 
-squares = document.querySelectorAll(".square");
+      if (first === "" || second === "" || third === "") {
+        continue;
+      }
+
+      if (first === second && first === third) {
+        winner(
+          first,
+          winConditions[i][0],
+          winConditions[i][1],
+          winConditions[i][2]
+        );
+        playing = false;
+        winnerFound = true;
+        break;
+      }
+    }
+
+    if (winnerFound !== true) {
+      fullBoard = board.find((element) => element === "");
+      if (fullBoard === undefined) {
+        winner("-");
+        playing = false;
+      }
+    }
+  };
+
+  return { board, move, reset };
+})();
 
 squares.forEach((square) => {
   square.addEventListener("click", (e) => {
     index = e.target.id;
     gameBoard.move(index);
-    displayBoard();
   });
 });
 
+newGame.addEventListener("click", () => {
+  gameBoard.reset();
+});
+
 function resetBoard() {
+  conclusion.textContent = "";
   squares.forEach((square) => {
     square.textContent = "";
   });
 }
 
-function displayBoard() {
+function displayBoard(board) {
   resetBoard();
   let counter = 0,
     element,
     symbol;
 
   squares.forEach((square) => {
-    if (gameBoard.board[counter] === "") {
+    if (board[counter] === "") {
       counter++;
     } else {
-      symbol = gameBoard.board[counter];
+      symbol = board[counter];
       element = document.createElement("div");
       element.classList.add("symbol");
       element.textContent = symbol;
@@ -56,4 +118,13 @@ function displayBoard() {
       counter++;
     }
   });
+}
+
+function winner(symbol, squareA = 0, squareB = 0, sqaureC = 0) {
+  conclusion.textContent =
+    symbol === "X"
+      ? "Player 1 Won"
+      : symbol === "O"
+      ? "Player 2 Won"
+      : "Game Ends In A Tie";
 }
